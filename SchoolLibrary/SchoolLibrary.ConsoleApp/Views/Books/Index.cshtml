@@ -1,0 +1,44 @@
+﻿@model IReadOnlyList<Book>
+@{
+    ViewData["Title"] = "Книги";
+}
+
+@if (TempData["Message"] is string message)
+{
+    <p class="msg">@message</p>
+}
+
+<table>
+    <thead>
+    <tr><th>№</th><th>Заглавие</th><th>Автор</th><th>Статус</th><th></th></tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Title</td>
+            <td>@item.Author</td>
+            <td>
+                <span class="@(item.IsBorrowed ? "taken" : "free")">
+                    @(item.IsBorrowed ? "Заета" : "Налична")
+                </span>
+            </td>
+            <td>
+                @if (item.IsBorrowed)
+                {
+                    <form asp-action="Return" asp-route-id="@item.Id" method="post">
+                        <button type="submit">Върни</button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="Borrow" asp-route-id="@item.Id" method="post">
+                        <button type="submit">Заеми</button>
+                    </form>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
